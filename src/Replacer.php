@@ -84,7 +84,7 @@ class Replacer implements ReplacerInterface{
 	 */
 	public static function getStaticReplacer($open, $close, $pattern){
 		$k = md5(serialize([$open,$close, $pattern]));
-		if(!self::$static_replacers[$k]){
+		if(!isset(self::$static_replacers[$k])){
 			self::$static_replacers[$k] = new Replacer($open, $close, $pattern);
 		}
 		return self::$static_replacers[$k];
