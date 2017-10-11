@@ -43,21 +43,36 @@ class Replacer implements ReplacerInterface{
 	 * @TODO implemented choice of bracers as in ceive.text-replacer.js
 	 * @param $text
 	 * @param callable $evaluator
+	 * @param boolean $safe_type @TODO safe_type if template contains only placeholder without other string chars
 	 * @return mixed
 	 */
-	public function replace($text, callable $evaluator){
+	public function replace($text, callable $evaluator, $safe_type = false){
 		$escaped = '\\\\\\\\|\\\\'.preg_quote($this->open);
 		$regexp = '@'. $escaped .'|('.preg_quote($this->open).')('.$this->pattern.')('.preg_quote($this->close).')@S';
-		return preg_replace_callback($regexp, function($m) use($evaluator){
+		
+		if($safe_type){
+			
+		}
+		$lastPh = null;
+		$lastValue = null;
+		$result = preg_replace_callback($regexp, function($m) use($evaluator, &$lastPh, & $lastValue){
 			if($m[0] === '\\\\'){
 				return '\\';
 			}else if(substr($m[0],0,1) === '\\'.$this->open){
 				return $this->open;
 			}else{
 				// $placeholder_name, $bracket_open, $bracket_close, $placeholder_full
-				return call_user_func($evaluator, $m[2], $m[1], $m[3], $m[0]);
+				$value = call_user_func($evaluator, $m[2], $m[1], $m[3], $m[0]);
+				$lastPh = $m[0];
+				$lastValue = $value;
+				return $value;
 			}
 		}, $text);
+		
+		if($safe_type && $lastPh === $text){
+			return $lastValue;
+		}
+		return $result;
 	}
 	
 	/**

@@ -11,7 +11,7 @@
     ],
 	"autoload" : {
 	  "psr-4": {
-		"Ceive\\Text\\Replacer\\": "src/"
+		"Ceive\\Text\\": "src/"
 	  }
 	},
     "minimum-stability": "dev",
