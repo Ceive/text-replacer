@@ -96,7 +96,7 @@ class Replacer implements ReplacerInterface{
 	 * @return ReplacerInterface
 	 */
 	public static function getStaticReplacerByKey($key){
-		if(self::$static_replacers[$key]){
+		if(isset(self::$static_replacers[$key])){
 			return self::$static_replacers[$key];
 		}
 		return null;
